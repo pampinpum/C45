@@ -16,22 +16,24 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class MapearAtributos extends Mapper<LongWritable, Text, Text, IntWritable> { 
 	    private final static IntWritable one = new IntWritable(1);
 	    private Text texto = new Text();
+	    private static String[] nombreClase;
     //método de la clase Map
+    @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { 	     
      	String linea = value.toString();
-        System.out.println(linea);
-        StringTokenizer tokenizer = new StringTokenizer(linea,"\r");
-         while (tokenizer.hasMoreTokens()) {
-        	 linea = tokenizer.nextToken();
+     	//para identificar la primera linea del archivo de entrada se va a comparar la llave, la comparacion se hara TODAS las veces
+     	if (key.get() == 0){
+     		nombreClase= linea.split(",");    
+     	} else{
           	 String[] cadena = linea.split(",");       
         	 for (int i = 0; i<=cadena.length -2; i++){    
         		 //Adiciona el número de atributo, el valor del atributo y la clase asociada
-        		 texto.set(i + "," + cadena[i] + "," + cadena[cadena.length -1] + ",");        
-        		 //texto.set(cadena[i].split("-")[0] + "," + cadena[i].split("-")[1] + "," + cadena[cadena.length -1] + ",");         
+        		 texto.set(nombreClase[i] + "," + cadena[i] + "," + cadena[cadena.length -1] + ",");   
+        		 System.out.println(texto);
                  context.write(texto, one);               
         	 	}   
         	 texto.set("total," + "total" + "," + cadena[cadena.length-1] +",");
-        	 context.write(texto, one);
-          }          
+        	 context.write(texto, one);   
+     	}
     }
  } 
