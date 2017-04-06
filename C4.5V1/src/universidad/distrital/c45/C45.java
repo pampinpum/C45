@@ -23,6 +23,8 @@ import universidad.distrital.c45.mapper.AgrupaValores;
 import universidad.distrital.c45.mapper.MapearAtributos;
 import universidad.distrital.c45.reducer.ConcatenaValores;
 import universidad.distrital.c45.reducer.SumarAtributos;
+import universidad.distrital.c45.util.GexfGenerator;
+import universidad.distrital.c45.util.Log;
         
 /**
  * Clase principal del algotimo
@@ -32,6 +34,7 @@ import universidad.distrital.c45.reducer.SumarAtributos;
 public class C45 {
               
  public static void main(String[] args) throws Exception {
+	
 	Date date = new Date();
     String empece = "empecé a esta hora " + date.toString();
 	Log.getInstance().infoEjecucionHora("empecé a esta hora", C45.class);
@@ -49,6 +52,8 @@ public class C45 {
 	Log.getInstance().infoEjecucionHora("terminé a esta hora" + " duración " + segundos.toString(), C45.class);
     String termine = "terminé a esta hora " + date.toString();
     leerArbol(raiz);
+    GexfGenerator gexfGenerator = new GexfGenerator();
+	gexfGenerator.generar(raiz);
 	//EMail e = new EMail();
 	//e.enviar(empece, termine, segundos.toString(), nombreArchivo); 
  }
@@ -75,32 +80,48 @@ public class C45 {
   * @throws IOException excepción de lectura
   */
  public void crearTxtAtributos(Path directorioLectura, String path, Configuration conf, ValorAtributo valorAtributo, String idAtributo) throws IOException{
+	 
 	 Path salida = new Path(path + valorAtributo.nombre + ".txt");
 	 Path pt=directorioLectura;
 	 FileSystem fs = FileSystem.get(conf);
-	 BufferedWriter br1=new BufferedWriter(new OutputStreamWriter(fs.create(salida, true)));
-	 BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
+	 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fs.create(salida, true)));
+	 BufferedReader reader = new BufferedReader(new InputStreamReader(fs.open(pt)));
+	 
 	 try {
-	   String line;
-	   line=br.readLine();
-	   while (line != null){		  
-	   String[] cadena = line.split(","); 
-	   if (cadena[Integer.parseInt(idAtributo)].equals(valorAtributo.nombre)){
-		   String linea = "";
+	   String lineaActual;
+	   lineaActual=reader.readLine();	
+	  
+	   Map<String, Integer> clases = new HashMap<String, Integer>();
+	   String[] clasesLinea = lineaActual.split(","); 
+	   List<String> newClases = new LinkedList<String>();
+	   for (int i = 0; i < clasesLinea.length; i++){
+		   clases.put(clasesLinea[i], i);  
+		   newClases.add(clasesLinea[i]);
+	   }
+	   newClases.remove(idAtributo);
+	   
+	   String newClasesStr = "";
+	   for (String newClase : newClases)
+		   newClasesStr = newClasesStr + newClase + ",";
+	   writer.write(newClasesStr.substring(0, newClasesStr.length() - 1) + "\n");
+	   lineaActual=reader.readLine();
+	   
+	   while (lineaActual != null){		  
+	   String[] cadena = lineaActual.split(","); 
+	   if (cadena[clases.get(idAtributo)].equals(valorAtributo.nombre)){
+		   String lineaNueva = "";
 		   for(int i = 0; i<cadena.length;i++){
-			   if(cadena[i].equals(valorAtributo.nombre)){
-			   }else{
-				   linea = linea + cadena[i] + ",";
-			   }
+			   if(!cadena[i].equals(valorAtributo.nombre))
+				   lineaNueva = lineaNueva + cadena[i] + ",";
 		   }
-		   linea = linea.substring(0, linea.length()-1) + "\n";
-		   br1.write(linea);          
+		   lineaNueva = lineaNueva.substring(0, lineaNueva.length()-1) + "\n";
+		   writer.write(lineaNueva);          
 	   }
-	   line = br.readLine();
+	   lineaActual = reader.readLine();
 	   }
-	   br1.close();
+	   writer.close();
 	 } finally {
-	   br.close();
+	   reader.close();
 	 }
  }
  

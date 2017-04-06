@@ -1,3 +1,4 @@
+package universidad.distrital.c45.util;
 /*package universidad.distrital.c45;
 
 import java.util.Properties;

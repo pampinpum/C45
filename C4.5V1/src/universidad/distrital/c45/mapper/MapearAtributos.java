@@ -1,6 +1,5 @@
 package universidad.distrital.c45.mapper;
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -29,7 +28,7 @@ public class MapearAtributos extends Mapper<LongWritable, Text, Text, IntWritabl
         	 for (int i = 0; i<=cadena.length -2; i++){    
         		 //Adiciona el número de atributo, el valor del atributo y la clase asociada
         		 texto.set(nombreClase[i] + "," + cadena[i] + "," + cadena[cadena.length -1] + ",");   
-        		 System.out.println(texto);
+        		 //System.out.println(texto);
                  context.write(texto, one);               
         	 	}   
         	 texto.set("total," + "total" + "," + cadena[cadena.length-1] +",");
