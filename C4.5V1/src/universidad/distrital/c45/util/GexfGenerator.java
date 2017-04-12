@@ -27,7 +27,7 @@ public class GexfGenerator {
 	DocumentBuilderFactory dbFactory;
 	DocumentBuilder dBuilder;
 	Document doc;
-	Map<String, Set<String>> mapaArbol;
+	Map<String, HashMap<String, String>> mapaArbol;
 	int chambonada = 0;
 	
 	
@@ -40,60 +40,80 @@ public class GexfGenerator {
 			e.printStackTrace();
 		}
         doc = dBuilder.newDocument();
-        mapaArbol = new HashMap<String, Set<String>>();
+        mapaArbol = new HashMap<String, HashMap<String, String>>();
 	}
 
 	private void generarMapa(Nodo arbol){
 		if(arbol.id != null){
-			Set<String> aristas;
+			HashMap<String, String> aristas;
 			if(arbol.id.equals("total"))
 			{
-				aristas = new HashSet<String>();
-				aristas.add(arbol.valor);
+				aristas = new HashMap<String, String>();
+				aristas.put(arbol.valor,null);
 				mapaArbol.put(arbol.id + chambonada, aristas);
 				chambonada++;
 			} else {
 			
 				if(mapaArbol.containsKey(arbol.id)){
 					aristas = mapaArbol.get(arbol.id);
-					aristas.add(arbol.valor);
+					aristas.put(arbol.valor,(arbol.hijos.get(0).id.equals("total")) ? arbol.hijos.get(0).id + chambonada : arbol.hijos.get(0).id);
 				} 
 				else {
-					aristas = new HashSet<String>();
-					aristas.add(arbol.valor);
+					aristas = new HashMap<String, String>();
+					aristas.put(arbol.valor, (arbol.hijos.get(0).id.equals("total")) ? arbol.hijos.get(0).id + chambonada : arbol.hijos.get(0).id);
 					mapaArbol.put(arbol.id, aristas);
 				}
 			}
 		}
+		
 		 for(Nodo nodo : arbol.hijos)
 			 generarMapa(nodo); 
 		
 	}
 	
-	private void recorrerArbol(Nodo arbol) {		
-		/*Element node = doc.createElement("node");
-		
-        Attr nodeId = doc.createAttribute("id");
-        nodeId.setValue(arbol.id);
-        node.setAttributeNode(nodeId);
-        Attr nodeLabel = doc.createAttribute("label");
-        nodeLabel.setValue(arbol.id);
-        node.setAttributeNode(nodeLabel);
-        node.setNodeValue(arbol.id);
-        //if(!testSet.contains(node))
-        	testSet.add(node);    
-        
-        for(Nodo nodo : arbol.hijos)
-        	recorrerArbol(nodo);        */
+	private void recorrerMapa(Element nodes, Element edges) {		
+		for (Map.Entry<String, HashMap<String, String>> entry : mapaArbol.entrySet())
+		{
+			Element node = doc.createElement("node");
+			Attr nodeId = doc.createAttribute("id");
+	        nodeId.setValue(entry.getKey());
+	        node.setAttributeNode(nodeId);
+	        Attr nodeLabel = doc.createAttribute("label");
+	        if(entry.getKey().substring(0,5).equals("total"))
+	        	nodeLabel.setValue(entry.getValue().entrySet().iterator().next().getKey());
+	        else
+	        	nodeLabel.setValue(entry.getKey());
+	        
+
+	        node.setAttributeNode(nodeLabel);
+	        nodes.appendChild(node);
+	        
+	        for (Map.Entry<String, String> arista : entry.getValue().entrySet())
+			{
+	        	if(arista.getValue() != null){
+	        	 Element edge = doc.createElement("edge");
+		         Attr edgeId = doc.createAttribute("id");
+		         edgeId.setValue(arista.getKey() + "-" + arista.getValue());
+		         edge.setAttributeNode(edgeId);
+		         Attr edgeSource = doc.createAttribute("source");
+		         edgeSource.setValue(entry.getKey());
+		         edge.setAttributeNode(edgeSource);
+		         Attr edgeTarget = doc.createAttribute("target");
+		         edgeTarget.setValue(arista.getValue());
+		         edge.setAttributeNode(edgeTarget);
+		         Attr edgeLabel = doc.createAttribute("label");
+		         edgeLabel.setValue(arista.getKey());
+		         edge.setAttributeNode(edgeLabel);
+		         edges.appendChild(edge);
+	        	}
+			}
+		}
+	
 	}
 	
 	public void generar(Nodo arbol){
 	 try {
-		 //for each hijo in arbol 
-		 //toma el id y crea un nodo 
-		 //toma el valor y crea un edge hacia el hijo
-		 
-         
+
          // root element
          Element rootElement = doc.createElement("gexf");
          doc.appendChild(rootElement);
@@ -127,43 +147,16 @@ public class GexfGenerator {
          defaultedgetype.setValue("directed");
          graph.setAttributeNode(defaultedgetype);
          
-         
+         //node element
          Element nodes = doc.createElement("nodes");
          graph.appendChild(nodes);
          
-         
-         /*Element node = doc.createElement("node");
-         Attr nodeId = doc.createAttribute("id");
-         nodeId.setValue("0");
-         node.setAttributeNode(nodeId);
-         Attr nodeLabel = doc.createAttribute("label");
-         nodeLabel.setValue("Outlook");
-         node.setAttributeNode(nodeLabel);
-         nodes.appendChild(node);*/
-         
-         
-         generarMapa(arbol);
-         //recorrerArbol(arbol);
-        // for (Element element : testSet)
-        	// nodes.appendChild(element);
-         
+         //edge element
          Element edges = doc.createElement("edges");
          graph.appendChild(edges);
-         Element edge = doc.createElement("edge");
-         Attr edgeId = doc.createAttribute("id");
-         edgeId.setValue("0");
-         edge.setAttributeNode(edgeId);
-         Attr edgeSource = doc.createAttribute("source");
-         edgeSource.setValue("0");
-         edge.setAttributeNode(edgeSource);
-         Attr edgeTarget = doc.createAttribute("target");
-         edgeTarget.setValue("1");
-         edge.setAttributeNode(edgeTarget);
-         Attr edgeLabel = doc.createAttribute("label");
-         edgeLabel.setValue("Sunny");
-         edge.setAttributeNode(edgeLabel);
          
-         edges.appendChild(edge);         
+         generarMapa(arbol);
+         recorrerMapa(nodes, edges);
 
          // write the content into xml file
          TransformerFactory transformerFactory = TransformerFactory.newInstance();
