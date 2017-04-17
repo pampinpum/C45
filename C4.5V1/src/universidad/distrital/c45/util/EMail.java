@@ -1,8 +1,8 @@
 package universidad.distrital.c45.util;
-/*package universidad.distrital.c45;
+
 
 import java.util.Properties;
-
+/*
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -10,10 +10,10 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
+*/
 public class EMail {
 
-	public void enviar(String empece, String termine, String segundos, String conjuntoDatos){
+	/*public void enviar(String empece, String termine, String segundos, String conjuntoDatos){
 
 		final String username = "nikolucas@gmail.com";
 		final String password = "Dihidrocodeina1";
@@ -51,5 +51,5 @@ public class EMail {
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
-	}
-}*/
+	}*/
+}

@@ -53,7 +53,7 @@ public class C45 {
     String termine = "terminé a esta hora " + date.toString();
     leerArbol(raiz);
     GexfGenerator gexfGenerator = new GexfGenerator();
-	gexfGenerator.generar(raiz);
+	gexfGenerator.generar(raiz, nombreArchivo, String.valueOf(valorGananciaMin));
 	//EMail e = new EMail();
 	//e.enviar(empece, termine, segundos.toString(), nombreArchivo); 
  }

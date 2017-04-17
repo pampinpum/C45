@@ -1,12 +1,8 @@
 package universidad.distrital.c45.util;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -111,7 +107,7 @@ public class GexfGenerator {
 	
 	}
 	
-	public void generar(Nodo arbol){
+	public void generar(Nodo arbol, String conjuntoDatos, String precision){
 	 try {
 
          // root element
@@ -162,7 +158,7 @@ public class GexfGenerator {
          TransformerFactory transformerFactory = TransformerFactory.newInstance();
          Transformer transformer = transformerFactory.newTransformer();
          DOMSource source = new DOMSource(doc);
-         StreamResult result = new StreamResult(new File("cars.gexf"));
+         StreamResult result = new StreamResult(new File("GefxModel" + conjuntoDatos + precision + ".gexf"));
          transformer.transform(source, result);
          // Output to console for testing
          StreamResult consoleResult = new StreamResult(System.out);
