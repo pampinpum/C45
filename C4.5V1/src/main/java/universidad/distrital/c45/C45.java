@@ -16,6 +16,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+import org.apache.log4j.BasicConfigurator;
 import universidad.distrital.c45.estructura.Atributo;
 import universidad.distrital.c45.estructura.Nodo;
 import universidad.distrital.c45.estructura.ValorAtributo;
@@ -32,6 +33,7 @@ import universidad.distrital.c45.reducer.SumarAtributos;
 public class C45 {
               
  public static void main(String[] args) throws Exception {
+ 	BasicConfigurator.configure();
 	Date date = new Date();
     String empece = "empecé a esta hora " + date.toString();
 	Log.getInstance().infoEjecucionHora("empecé a esta hora", C45.class);
