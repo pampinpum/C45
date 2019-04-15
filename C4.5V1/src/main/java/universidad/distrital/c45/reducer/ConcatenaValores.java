@@ -1,8 +1,9 @@
 package universidad.distrital.c45.reducer;
-import java.io.IOException;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import java.io.IOException;
 
 
 /**
@@ -12,7 +13,8 @@ import org.apache.hadoop.mapreduce.Reducer;
  *
  */
  public  class ConcatenaValores extends Reducer<Text, Text, Text, String> {
-	    private int numero = 0;
+     private int numero = 0;
+
     public void reduce(Text key, Iterable<Text> values, Context context) 
       throws IOException, InterruptedException {
          Text llave =  new Text (context.getCurrentKey().toString());

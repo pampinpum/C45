@@ -1,9 +1,10 @@
 package universidad.distrital.c45.reducer;
-import java.io.IOException;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import java.io.IOException;
       
 /**
  * Cuenta el número de veces que se asocia el valor de atributo al valor de clase y las adiciona al contexto

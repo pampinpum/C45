@@ -1,10 +1,4 @@
 package universidad.distrital.c45;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -15,7 +9,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
 import org.apache.log4j.BasicConfigurator;
 import universidad.distrital.c45.estructura.Atributo;
 import universidad.distrital.c45.estructura.Nodo;
@@ -24,6 +17,10 @@ import universidad.distrital.c45.mapper.AgrupaValores;
 import universidad.distrital.c45.mapper.MapearAtributos;
 import universidad.distrital.c45.reducer.ConcatenaValores;
 import universidad.distrital.c45.reducer.SumarAtributos;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Date;
         
 /**
  * Clase principal del algotimo
@@ -34,11 +31,11 @@ public class C45 {
               
  public static void main(String[] args) throws Exception {
  	BasicConfigurator.configure();
-	Date date = new Date();
-    String empece = "empecé a esta hora " + date.toString();
+	var date = new Date();
+    var empece = "empecé a esta hora " + date.toString();
 	Log.getInstance().infoEjecucionHora("empecé a esta hora", C45.class);
-	C45 algoritmo = new C45();
-	Nodo raiz = new Nodo();
+	var algoritmo = new C45();
+	var raiz = new Nodo();
 	raiz.valor = "raiz";
 	String inp = new String(args[0]);
 	//inp = "";

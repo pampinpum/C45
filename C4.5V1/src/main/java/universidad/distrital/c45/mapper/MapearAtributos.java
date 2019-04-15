@@ -1,11 +1,12 @@
 package universidad.distrital.c45.mapper;
-import java.io.IOException;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
 
 /**
  * Recibe un archivo plano con los valores de los atributos del conjunto de datos y la clase asociada 
@@ -18,9 +19,8 @@ public class MapearAtributos extends Mapper<LongWritable, Text, Text, IntWritabl
 	    private Text texto = new Text();
     //método de la clase Map
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException { 	     
-     	String linea = value.toString();
-        System.out.println(linea);
-        StringTokenizer tokenizer = new StringTokenizer(linea,"\r");
+     	var linea = value.toString();
+        var tokenizer = new StringTokenizer(linea,"\r");
          while (tokenizer.hasMoreTokens()) {
         	 linea = tokenizer.nextToken();
           	 String[] cadena = linea.split(",");       
